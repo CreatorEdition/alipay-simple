@@ -7,11 +7,15 @@
 header('Content-type:text/html; Charset=utf-8');
 
 /*** API 基本信息配置 ***/
+
 //应用ID,您的APPID。  https://open.alipay.com 账户中心->密钥管理->开放平台密钥，填写添加了电脑网站支付的应用的APPID
-$appid = 'xxxxx';
+$appid = '';
 
 //商户私钥  填写对应签名算法类型的私钥，如何生成密钥参考：https://docs.open.alipay.com/291/105971和https://docs.open.alipay.com/200/105310
-$rsaPrivateKey='xxxx';
+$rsaPrivateKey='';
+
+//支付宝网关 沙箱：openapi.alipaydev.com
+$gatewayUrl='https://openapi.alipaydev.com/gateway.do';
 
 //付款成功后 异步回调地址
 $returnUrl = 'http://www.xxx.com/alipay/return.php';
@@ -25,19 +29,21 @@ $signType = 'RSA2';
 /*** API 基本信息 结束 ***/
 
 /*** 订单信息 ***/
-$outTradeNo = uniqid();     //你自己的商品订单号，不能重复
-$payAmount = 0.01;          //付款金额，单位:元
-$orderName = '支付测试';    //订单标题
-
-
-
-
+//商户订单号（不可重复，本Demo使用UUID）
+$outTradeNo = uniqid();
+//付款金额，单位:元
+$payAmount = 0.01;
+//订单标题
+$orderName = '支付测试';
+/*** 订单信息 结束 ***/
 
 $aliPay = new AlipayService();
 $aliPay->setAppid($appid);
+$aliPay->setRsaPrivateKey($rsaPrivateKey);
+$aliPay->setGateway($gatewayUrl);
 $aliPay->setReturnUrl($returnUrl);
 $aliPay->setNotifyUrl($notifyUrl);
-$aliPay->setRsaPrivateKey($rsaPrivateKey);
+
 $aliPay->setTotalFee($payAmount);
 $aliPay->setOutTradeNo($outTradeNo);
 $aliPay->setOrderName($orderName);
@@ -47,11 +53,12 @@ echo $sHtml;
 class AlipayService
 {
     protected $appId;
+    protected $rsaPrivateKey;
+    protected $gatewayUrl;
     protected $returnUrl;
     protected $notifyUrl;
     protected $charset;
     //私钥值
-    protected $rsaPrivateKey;
     protected $totalFee;
     protected $outTradeNo;
     protected $orderName;
@@ -64,6 +71,11 @@ class AlipayService
     public function setAppid($appid)
     {
         $this->appId = $appid;
+    }
+
+    public function setGateway($gatewayUrl)
+    {
+        $this->gatewayUrl = $gatewayUrl;
     }
 
     public function setReturnUrl($returnUrl)
@@ -133,7 +145,7 @@ class AlipayService
      */
     protected function buildRequestForm($para_temp) {
 
-        $sHtml = "正在跳转至支付页面...<form id='alipaysubmit' name='alipaysubmit' action='https://openapi.alipay.com/gateway.do?charset=".$this->charset."' method='POST'>";
+        $sHtml = "正在跳转至支付页面...<form id='alipaysubmit' name='alipaysubmit' action='".$this->gatewayUrl."?charset=".$this->charset."' method='POST'>";
         while (list ($key, $val) = each ($para_temp)) {
             if (false === $this->checkEmpty($val)) {
                 $val = str_replace("'","&apos;",$val);
