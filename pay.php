@@ -146,7 +146,7 @@ class AlipayService
     protected function buildRequestForm($para_temp) {
 
         $sHtml = "正在跳转至支付页面...<form id='alipaysubmit' name='alipaysubmit' action='".$this->gatewayUrl."?charset=".$this->charset."' method='POST'>";
-        while (list ($key, $val) = each ($para_temp)) {
+        while (list ($key, $val) = $this->fun_adm_each($para_temp)) {
             if (false === $this->checkEmpty($val)) {
                 $val = str_replace("'","&apos;",$val);
                 $sHtml.= "<input type='hidden' name='".$key."' value='".$val."'/>";
@@ -156,6 +156,20 @@ class AlipayService
         $sHtml = $sHtml."<input type='submit' value='ok' style='display:none;''></form>";
         $sHtml = $sHtml."<script>document.forms['alipaysubmit'].submit();</script>";
         return $sHtml;
+    }
+
+    protected function fun_adm_each(&$array)
+    {
+        $res = array();
+        $key = key($array);
+        if ($key !== null) {
+            next($array);
+            $res[1] = $res['value'] = $array[$key];
+            $res[0] = $res['key'] = $key;
+        } else {
+            $res = false;
+        }
+        return $res;
     }
 
     public function generateSign($params, $signType = "RSA") {
