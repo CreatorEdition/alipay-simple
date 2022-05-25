@@ -1,13 +1,22 @@
 <?php
+/**
+ * 支付宝 同步回调通知
+ * 单文件60秒即可跑通支付宝支付
+ * @author https://github.com/louaolin/alipay-sdk
+ */
 header('Content-type:text/html; Charset=utf-8');
+
+/*** API 基本信息配置 ***/
 
 //支付宝公钥
 $alipayPublicKey='';
 
+/*** API 基本信息 结束 ***/
+
 $aliPay = new AlipayService($alipayPublicKey);
 
 //验证签名
-$result = $aliPay->rsaCheck($_POST,$_POST['sign_type']);
+$result = $aliPay->rsaCheck($_GET,$_GET['sign_type']);
 
 /* 实际验证过程建议商户添加以下校验。
 1、商户需要验证该通知数据中的out_trade_no是否为商户系统中创建的订单号，
@@ -39,8 +48,6 @@ if($result===true){//验证成功
     //验证失败
     echo "验证失败";exit();
 }
-
-echo '不合法的请求';exit();
 
 class AlipayService
 {

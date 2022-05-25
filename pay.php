@@ -2,7 +2,7 @@
 /**
  * 支付宝 PC 网站支付
  * 单文件60秒即可跑通支付宝支付
- * @author Me
+ * @author https://github.com/louaolin/alipay-sdk
  */
 header('Content-type:text/html; Charset=utf-8');
 
@@ -15,7 +15,7 @@ $appid = '';
 $rsaPrivateKey='';
 
 //支付宝网关 沙箱：openapi.alipaydev.com
-$gatewayUrl='https://openapi.alipaydev.com/gateway.do';
+$gatewayUrl='https://openapi.alipay.com/gateway.do';
 
 //付款成功后 异步回调地址
 $returnUrl = 'http://www.xxx.com/alipay/return.php';

@@ -1,8 +1,17 @@
 <?php
+/**
+ * 支付宝 异步步回调通知
+ * 单文件60秒即可跑通支付宝支付
+ * @author https://github.com/louaolin/alipay-sdk
+ */
 header('Content-type:text/html; Charset=utf-8');
+
+/*** API 基本信息配置 ***/
 
 //支付宝公钥
 $alipayPublicKey='';
+
+/*** API 基本信息 结束 ***/
 
 $aliPay = new AlipayService($alipayPublicKey);
 
@@ -46,8 +55,7 @@ if($result===true){//验证成功
 
         //注意：
         //退款日期超过可退款期限后（如三个月可退款），支付宝系统发送该交易状态通知
-    }
-    else if ($_POST['trade_status'] == 'TRADE_SUCCESS') {
+    } else if ($_POST['trade_status'] == 'TRADE_SUCCESS') {
         //判断该笔订单是否在商户网站中已经做过处理
         //如果没有做过处理，根据订单号（out_trade_no）在商户网站的订单系统中查到该笔订单的详细，并执行商户的业务程序
         //请务必判断请求时的total_amount与通知时获取的total_fee为一致的
@@ -62,7 +70,6 @@ if($result===true){//验证成功
     echo "fail";exit();
 
 }
-echo 'error';exit();
 
 
 class AlipayService
