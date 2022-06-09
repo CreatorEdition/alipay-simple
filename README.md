@@ -1,4 +1,4 @@
-# Alipay easysdk for php
+# Alipay simple for php
 60秒接入支付宝支付，一个PHP文件即可服用  
 集成的时候踩了太多官方的坑了 = =
 
